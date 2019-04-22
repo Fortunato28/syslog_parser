@@ -1,4 +1,7 @@
+use recap::{from_captures, Regex};
+use serde::Deserialize;
 use std::env;
+use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Lines, Result};
 use std::path::Path;
@@ -42,7 +45,8 @@ fn read_file(file_name: &str) -> std::result::Result<Lines<BufReader<File>>, io:
     Ok(BufReader::new(input).lines())
 }
 
-struct Log_Message {
+#[derive(Debug, Deserialize, PartialEq)]
+struct LogMessage {
     facility: String,
     severity: String,
     timestamp: String,
@@ -51,9 +55,9 @@ struct Log_Message {
 }
 
 //TODO: maybe do I need something more meaningful?
-impl Log_Message {
-    pub fn new() -> Log_Message {
-        Log_Message {
+impl LogMessage {
+    pub fn new() -> LogMessage {
+        LogMessage {
             facility: String::new(),
             severity: String::new(),
             timestamp: String::new(),
@@ -69,6 +73,19 @@ mod tests {
 
     #[test]
     fn check_regexp() {
-        B
+        let pattern = Regex::new(r#"(?P<facility>\S+)\s(?P<severity>\S+)\s(?P<timestamp>\S+)\s(?P<source_name>\S+)\s(?P<data>\S+)"#).unwrap();
+
+        let example: LogMessage = from_captures(&pattern, "hello there who is here").unwrap();
+
+        assert_eq!(
+            example,
+            LogMessage {
+                facility: "hello".into(),
+                severity: "there".into(),
+                timestamp: "who".into(),
+                source_name: "is".into(),
+                data: "here".into(),
+            }
+        );
     }
 }
