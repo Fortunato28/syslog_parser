@@ -14,9 +14,9 @@ fn main() {
     // TODO: change to unwrap_or_else
     let file_data_iter = read_file(&log).unwrap();
 
-    for line in file_data_iter {
-        println!("{}", line.unwrap());
-    }
+    //for line in file_data_iter {
+    //    println!("{}", line.unwrap());
+    //}
 
     dbg!(&log);
 }
@@ -40,4 +40,35 @@ fn read_file(file_name: &str) -> std::result::Result<Lines<BufReader<File>>, io:
     //}
 
     Ok(BufReader::new(input).lines())
+}
+
+struct Log_Message {
+    facility: String,
+    severity: String,
+    timestamp: String,
+    source_name: String,
+    data: String,
+}
+
+//TODO: maybe do I need something more meaningful?
+impl Log_Message {
+    pub fn new() -> Log_Message {
+        Log_Message {
+            facility: String::new(),
+            severity: String::new(),
+            timestamp: String::new(),
+            source_name: String::new(),
+            data: String::new(),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn check_regexp() {
+        B
+    }
 }
