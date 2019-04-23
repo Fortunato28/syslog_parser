@@ -1,11 +1,11 @@
 use recap::{from_captures, Regex};
 use serde::Deserialize;
 use std::env;
-use std::error::Error;
 use std::fs::File;
-use std::io::{self, BufRead, BufReader, Lines, Result};
-use std::path::Path;
+use std::io::{self, BufRead, BufReader, Lines};
 use std::process;
+mod get_different_sources;
+use get_different_sources as case1;
 
 fn main() {
     let mut vec_with_parsed_lines = Vec::new();
@@ -15,14 +15,15 @@ fn main() {
         process::exit(1);
     });
 
+    // Filling vector parsed lines
     for line in read_file(&log).unwrap() {
         vec_with_parsed_lines.push(ParsedLine::new(&line.unwrap()));
     }
 
-    dbg!(&vec_with_parsed_lines[7]);
+    case1::extract_diff_sources(&vec_with_parsed_lines);
 }
 
-fn get_args() -> std::result::Result<String, &'static str> {
+fn get_args() -> Result<String, &'static str> {
     let mut args = env::args();
     args.next();
 
@@ -34,25 +35,21 @@ fn get_args() -> std::result::Result<String, &'static str> {
     Ok(log_name)
 }
 
-fn read_file(file_name: &str) -> std::result::Result<Lines<BufReader<File>>, io::Error> {
+fn read_file(file_name: &str) -> Result<Lines<BufReader<File>>, io::Error> {
     let input = File::open(file_name)?;
-    //for line in BufReader::new(input).lines() {
-    //    println!("{}", line?)
-    //}
 
     Ok(BufReader::new(input).lines())
 }
 
 #[derive(Debug, Deserialize, PartialEq)]
-struct ParsedLine {
-    facility: String,
-    severity: String,
-    timestamp: String,
-    source_name: String,
-    data: String,
+pub struct ParsedLine {
+    pub facility: String,
+    pub severity: String,
+    pub timestamp: String,
+    pub source_name: String,
+    pub data: String,
 }
 
-//TODO: maybe do I need something more meaningful?
 impl ParsedLine {
     pub fn new(line: &str) -> ParsedLine {
         let pattern = Regex::new(
@@ -68,7 +65,25 @@ impl ParsedLine {
         )
         .unwrap();
 
-        let parsed_line: ParsedLine = from_captures(&pattern, line).unwrap();
+        let parsed_line: ParsedLine = from_captures(&pattern, line).unwrap_or_else(|err| {
+            eprintln!("Some bad line: {}", err);
+
+            let bad_pattern = Regex::new(
+                r"(?x)
+        <
+        (?P<facility>\d{2})
+        (?P<severity>\d{1})
+        >
+        (?P<timestamp>\w{3}\s\d{2}\s\d{2}:\d{2}:\d{2})\s
+        (?P<source_name>\S+?)
+        \s
+        (?P<data>.*)",
+            )
+            .unwrap();
+
+            let bad_parsed_line: ParsedLine = from_captures(&bad_pattern, line).unwrap();
+            bad_parsed_line
+        });
         parsed_line
     }
 }
