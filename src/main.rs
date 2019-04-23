@@ -20,6 +20,9 @@ fn main() {
     //for line in file_data_iter {
     //    println!("{}", line.unwrap());
     //}
+    //
+
+    check_regex();
 
     dbg!(&log);
 }
@@ -67,12 +70,25 @@ impl LogMessage {
     }
 }
 
+fn check_regex() {
+    let reg = Regex::new(r"<(\d{2})(\d{1})>(Nov\s\d+\s\d{2}:\d{2}:\d{2})\s(.+?):\s(.*)").unwrap();
+
+    let log_string = "<166>Nov 13 15:38:01 10.181.233.206 %ASA-6-303002: FTP connection from outside:172.21.173.130/49845 to vos2:10.81.123.19/21, user comersant Stored file 2014-11-13_15-33-29---1---megafon-out.wav";
+
+    for cap in reg.captures_iter(log_string) {
+        println!(
+            "1: {}\n 2: {}\n 3: {}\n 4: {}\n 5: {}\n",
+            &cap[1], &cap[2], &cap[3], &cap[4], &cap[5]
+        );
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn check_regexp() {
+    fn check_recap() {
         let pattern = Regex::new(r#"(?P<facility>\S+)\s(?P<severity>\S+)\s(?P<timestamp>\S+)\s(?P<source_name>\S+)\s(?P<data>\S+)"#).unwrap();
 
         let example: LogMessage = from_captures(&pattern, "hello there who is here").unwrap();
@@ -87,5 +103,20 @@ mod tests {
                 data: "here".into(),
             }
         );
+    }
+
+    #[test]
+    fn check_regex() {
+        let reg =
+            Regex::new(r"<(\d{2})(\d{1})>(Nov\s\d+\s\d{2}:\d{2}:\d{2})\s(.+?):\s(.*)").unwrap();
+
+        let log_string = "<166>Nov 13 15:38:01 10.181.233.206 %ASA-6-303002: FTP connection from outside:172.21.173.130/49845 to vos2:10.81.123.19/21, user comersant Stored file 2014-11-13_15-33-29---1---megafon-out.wav";
+
+        for cap in reg.captures_iter(log_string) {
+            println!(
+                "1: {}\n 2: {}\n 3: {}\n 4: {}\n 5: {}\n",
+                &cap[1], &cap[2], &cap[3], &cap[4], &cap[5]
+            );
+        }
     }
 }
