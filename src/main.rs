@@ -15,11 +15,11 @@ fn main() {
         process::exit(1);
     });
 
-    // TODO: change to unwrap_or_else
-
     for line in read_file(&log).unwrap() {
-        vec_with_parsed_lines.push(line.unwrap());
+        vec_with_parsed_lines.push(ParsedLine::new(&line.unwrap()));
     }
+
+    dbg!(&vec_with_parsed_lines[7]);
 }
 
 fn get_args() -> std::result::Result<String, &'static str> {
@@ -54,33 +54,23 @@ struct ParsedLine {
 
 //TODO: maybe do I need something more meaningful?
 impl ParsedLine {
-    pub fn new() -> ParsedLine {
-        ParsedLine {
-            facility: String::new(),
-            severity: String::new(),
-            timestamp: String::new(),
-            source_name: String::new(),
-            data: String::new(),
-        }
-    }
-}
-
-fn parse_line(line: &str) -> ParsedLine {
-    let pattern = Regex::new(
-        r"(?x)
+    pub fn new(line: &str) -> ParsedLine {
+        let pattern = Regex::new(
+            r"(?x)
         <
         (?P<facility>\d{2})
         (?P<severity>\d{1})
         >
         (?P<timestamp>\w{3}\s\d{2}\s\d{2}:\d{2}:\d{2})\s
-        (?P<source_name>.*)
+        (?P<source_name>.+?)
         :\s
         (?P<data>.*)",
-    )
-    .unwrap();
+        )
+        .unwrap();
 
-    let parsed_line: ParsedLine = from_captures(&pattern, line).unwrap();
-    parsed_line
+        let parsed_line: ParsedLine = from_captures(&pattern, line).unwrap();
+        parsed_line
+    }
 }
 
 //TODO: fix test, it must be normal unit tests
