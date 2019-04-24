@@ -21,8 +21,6 @@ fn main() {
         vec_with_parsed_lines.push(ParsedLine::new(&line.unwrap()));
     }
 
-    dbg!(&vec_with_parsed_lines[29]);
-
     cases::perform_cases(&vec_with_parsed_lines);
 }
 

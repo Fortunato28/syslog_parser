@@ -15,15 +15,14 @@ pub fn perform_cases(parsed_data: &Vec<ParsedLine>) {
             sources.push(line.hostname.clone())
         }
 
-        // Case 2
+        // Cases 2-3
         if line.appname.contains("ASA") {
+            // Case 2
             if !asa_messages.contains(&line.appname[7..13].into()) {
                 asa_messages.push(line.appname.clone()[7..13].to_string());
             }
-        }
 
-        // Case 3
-        if line.appname.contains("ASA") {
+            // Case 3
             let reg = Regex::new(r"(\d+\.\d+\.\d+\.\d+).*?(\d+\.\d+\.\d+\.\d+)").unwrap();
             let ip = &line.data;
             if reg.is_match(&ip) {
