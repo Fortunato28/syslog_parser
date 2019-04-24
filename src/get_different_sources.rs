@@ -20,13 +20,12 @@ pub fn extract_diff_sources(parsed_data: &Vec<ParsedLine>) {
         }
     });
 
-    dbg!(&asa_messages);
-
-    write_in_file(&sources).unwrap();
+    write_in_file("sources.txt", &sources).unwrap();
+    write_in_file("asa_messages_type.txt", &asa_messages).unwrap();
 }
 
-fn write_in_file(sources: &Vec<String>) -> std::io::Result<()> {
-    let mut file = File::create("sources.txt")?;
+fn write_in_file(file_name: &str, sources: &Vec<String>) -> std::io::Result<()> {
+    let mut file = File::create(file_name)?;
     for i in sources {
         write!(file, "{}\n", i)?;
     }
