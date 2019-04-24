@@ -21,7 +21,7 @@ fn main() {
         vec_with_parsed_lines.push(ParsedLine::new(&line.unwrap()));
     }
 
-    dbg!(&vec_with_parsed_lines[1]);
+    dbg!(&vec_with_parsed_lines[29]);
 
     case1::extract_diff_sources(&vec_with_parsed_lines);
 }
