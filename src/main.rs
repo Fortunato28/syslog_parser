@@ -5,7 +5,7 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Lines};
 use std::process;
 mod get_different_sources;
-use get_different_sources as case1;
+use get_different_sources as cases;
 
 fn main() {
     let mut vec_with_parsed_lines = Vec::new();
@@ -23,7 +23,7 @@ fn main() {
 
     dbg!(&vec_with_parsed_lines[29]);
 
-    case1::extract_diff_sources(&vec_with_parsed_lines);
+    cases::perform_cases(&vec_with_parsed_lines);
 }
 
 fn get_args() -> Result<String, &'static str> {
