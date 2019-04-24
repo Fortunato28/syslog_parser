@@ -9,6 +9,7 @@ use get_different_sources as case1;
 
 fn main() {
     let mut vec_with_parsed_lines = Vec::new();
+    vec_with_parsed_lines.reserve(7000);
 
     let log = get_args().unwrap_or_else(|err| {
         eprintln!("Problem passing arguments: {}", err);
@@ -19,6 +20,8 @@ fn main() {
     for line in read_file(&log).unwrap() {
         vec_with_parsed_lines.push(ParsedLine::new(&line.unwrap()));
     }
+
+    dbg!(&vec_with_parsed_lines[1]);
 
     case1::extract_diff_sources(&vec_with_parsed_lines);
 }
@@ -46,7 +49,8 @@ pub struct ParsedLine {
     pub facility: String,
     pub severity: String,
     pub timestamp: String,
-    pub source_name: String,
+    pub hostname: String,
+    pub appname: String,
     pub data: String,
 }
 
@@ -59,12 +63,15 @@ impl ParsedLine {
         (?P<severity>\d{1})
         >
         (?P<timestamp>\w{3}\s\d{2}\s\d{2}:\d{2}:\d{2})\s
-        (?P<source_name>.+?)
+        (?P<hostname>.+?)
+        \s
+        (?P<appname>.+?)
         :\s
         (?P<data>.*)",
         )
         .unwrap();
 
+        // TODO: ugly double regex, zip it
         let parsed_line: ParsedLine = from_captures(&pattern, line).unwrap_or_else(|err| {
             eprintln!("Some bad line: {}", err);
 
@@ -75,7 +82,9 @@ impl ParsedLine {
         (?P<severity>\d{1})
         >
         (?P<timestamp>\w{3}\s\d{2}\s\d{2}:\d{2}:\d{2})\s
-        (?P<source_name>\S+?)
+        (?P<hostname>\S+?)
+        \s
+        (?P<appname>.+?)
         \s
         (?P<data>.*)",
             )
@@ -102,7 +111,9 @@ mod tests {
             (?P<severity>\d{1})
             >
             (?P<timestamp>\w{3}\s\d{2}\s\d{2}:\d{2}:\d{2})\s
-            (?P<source_name>.*)
+            (?P<hostname>.*)
+            \s
+            (?P<appname>.+?)
             :\s
             (?P<data>.*)",
         )
@@ -117,7 +128,8 @@ mod tests {
                 facility: "16".into(),
                 severity: "6".into(),
                 timestamp: "Nov 13 15:38:01".into(),
-                source_name: "10.181.233.206 %ASA-6-303002".into(),
+                hostname: "10.181.233.206".into(),
+                appname: "%ASA-6-303002".into(),
                 data: "FTP connection".into(),
             }
         );

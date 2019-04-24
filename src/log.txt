@@ -27,6 +27,7 @@
 <174>Nov 13 15:35:59 ZOO-ML-CE master PFE_FW_SYSLOG_IP: FW: ge-0/0/23.0  A  udp 192.168.101.22867 192.168.8.45    53 51578 (1 packets)
 <174>Nov 13 15:35:59 ZOO-ML-CE master PFE_FW_SYSLOG_IP: FW: ge-0/0/19.0  A  tcp 192.168.108.215 192.168.235.246 10050 37000 (1 packets)
 <174>Nov 13 15:35:59 ZOO-ML-CE master PFE_FW_SYSLOG_IP: FW: ge-0/0/19.0  A  tcp 42.168.67.185 101.8.99.2  2776 40967 (1 packets)
+<174>Nov 13 15:37:51 ZOO-ML-CE last message repeated 3 times
 <174>Nov 13 15:35:59 ZOO-ML-CE master PFE_FW_SYSLOG_IP: FW: ge-0/0/23.0  A  tcp 10.251.38.236 10.156.139.103    80 49597 (1 packets)
 <174>Nov 13 15:35:59 ZOO-ML-CE master PFE_FW_SYSLOG_IP: FW: ge-0/0/10.0  A  tcp 196.150.230.149 42.168.67.185 38110  2776 (7 packets)
 <174>Nov 13 15:35:59 ZOO-ML-CE master PFE_FW_SYSLOG_IP: FW: ge-0/0/23.0  A  tcp 90.133.144.222 240.75.121.144 60908  9002 (1 packets)
@@ -42,4 +43,3 @@
 <174>Nov 13 15:36:19 ZOO-ML-CE backup PFE_FW_SYSLOG_IP: FW: ge-1/0/10.0  A  tcp 10.81.92.27 10.10.108.21  8080 58787 (1 packets)
 <174>Nov 13 15:36:19 ZOO-ML-CE backup PFE_FW_SYSLOG_IP: FW: ge-1/0/10.0  A  tcp 10.81.92.27 10.10.108.21  8080 58788 (1 packets)
 <174>Nov 13 15:36:19 ZOO-ML-CE backup PFE_FW_SYSLOG_IP: FW: ge-1/0/10.0  A  tcp 10.12.85.127 10.80.168.142 51739    80 (1 packets)
-<174>Nov 13 15:37:51 ZOO-ML-CE last message repeated 3 times
